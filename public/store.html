@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    <title>Document</title>
+</head>
+<body>
+    <input data-role="name" type="text" placeholder="name"> 
+    <input data-role="adress" type="text" placeholder="adress">
+    <input data-role="phone" type="text" placeholder="phone">
+    <button data-role="btn">click</button>
+
+<br /><br /><br /><br /><br />
+    <h1 data-role="h1appenname">get store by name</h1>
+    <input type="text" placeholder="name" data-role="storename" />
+    <button data-role="btnname">click me </button>
+<br /><br /><br /><br /><br />
+    <h1 data-role="h1appen">get store by id</h1>
+    <input type="text" placeholder="id" data-role="storeid" />
+    <button data-role="btnid">click me </button>
+<script>
+ let btn=document.querySelector('button[data-role="btn"]').addEventListener("click",function(){
+let name=document.querySelector('input[data-role="name"]').value,
+    adress=document.querySelector('input[data-role="adress"]').value,
+    phone=document.querySelector('input[data-role="phone"]').value;
+/* const formdata= new FormData(name,adress,phone) */
+    fetch('/insertallstores', {
+  method: 'POST',
+   headers: {
+    'Content-Type': 'application/json',
+  },  
+  body:JSON.stringify({name,adress,phone})
+})
+ .then(response => response.json())
+.then(data => {
+  console.log('Success:', data);
+})
+.catch((error) => {
+  console.error('Error:', error);
+});
+
+ })
+
+
+
+ $("[data-role='btnname']").click(function () {
+        let name = $("[data-role='storename']").val();
+        fetch("/getAllStorebyname/" +name, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify({name }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            $("[data-role='h1appenname']").append(
+              `<li>${JSON.stringify(data)}</li>`
+            );
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+     $("[data-role='btnid']").click(function () {
+            let _id = $("[data-role='storeid']").val();
+            fetch("/getAllStore/"+_id, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // body: JSON.stringify({ _id }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                $("[data-role='h1appen']").append(
+                  `<li>${JSON.stringify(data)}</li>`
+                );
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          });
+</script>
+</body>
+</html>
